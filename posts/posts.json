@@ -1,5 +1,14 @@
 [
   {
+    "id": "1783801560000",
+    "title": "Shipping with Fable 5",
+    "content": "Late-night session with Claude Fable 5: built and deployed two projects in 47 minutes. A WebGL train-robbery animation (now gamified with bounties and a day/night cycle) and mypager — a password-locked whiteboard that syncs encrypted notes through a private GitHub repo. Five commits, two repos, both live on GitHub Pages. Receipts in the picture.",
+    "media": [
+      "media/images/1783801560000-fablepushes.png"
+    ],
+    "createdAt": "2026-07-11T20:26:00.000Z"
+  },
+  {
     "id": "1769778372334",
     "title": null,
     "content": "This is so cool",
