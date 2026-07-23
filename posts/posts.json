@@ -1,5 +1,12 @@
 [
   {
+    "id": "1784813400000",
+    "title": "Lemon v2: the living room",
+    "content": "Rebuilt lemon from scratch. v1 proved an LLM could puppet a pixel-art character; v2 is the actual game. New 480x270 renderer, a 141-action engine so the character can genuinely move — sit, pace, curl up, come apart — and a brain grounded in motivational interviewing, red-teamed so you can't just command someone out of a depressive episode. The model speaks through a single @@hope|mood|act@@ tag the engine reads to drive the animation. You talk a person out of their room; it only opens up if you actually listen. Free-tier Groq to Gemini proxy behind it. Live.",
+    "media": [],
+    "createdAt": "2026-07-23T13:30:00.000Z"
+  },
+  {
     "id": "1783801560000",
     "title": "Shipping with Fable 5",
     "content": "Late-night session with Claude Fable 5: built and deployed two projects in 47 minutes. A WebGL train-robbery animation (now gamified with bounties and a day/night cycle) and mypager — a password-locked whiteboard that syncs encrypted notes through a private GitHub repo. Five commits, two repos, both live on GitHub Pages. Receipts in the picture.",
