@@ -227,6 +227,22 @@ class GitHubAPI {
      */
     async getPosts() {
         try {
+            // Public read: posts.json is served by GitHub Pages on the same
+            // origin, so fetch it directly — no API rate limit, no cross-site
+            // request for ad blockers to kill. The API path (which returns the
+            // sha needed for commits) is only used when a token is present.
+            if (!this.token) {
+                const response = await fetch(`${CONFIG.postsFile}?t=${Date.now()}`);
+                if (response.status === 404) {
+                    return { posts: [], sha: null };
+                }
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const posts = await response.json();
+                return { posts, sha: null };
+            }
+
             const result = await this.getFile(CONFIG.postsFile);
 
             if (!result.exists) {
@@ -282,7 +298,9 @@ class GitHubAPI {
      * Get the raw URL for a media file
      */
     getMediaUrl(path) {
-        return `https://raw.githubusercontent.com/${this.owner}/${this.repo}/${this.branch}/${path}`;
+        // Media lives in this repo, so GitHub Pages serves it on the same
+        // origin — a relative path avoids raw.githubusercontent.com entirely.
+        return path;
     }
 }
 
