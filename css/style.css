@@ -18,6 +18,14 @@
     --pixel-size: 4px;
     --font-pixel: 'Press Start 2P', cursive;
     --font-body: 'Courier New', monospace;
+    /* glass, the macOS 26+ material (light): only on things that float */
+    --glass: rgba(255, 255, 255, 0.62);
+    --glass-solid: rgba(255, 255, 255, 0.9);
+    --blur: blur(24px) saturate(180%);
+    --rim: inset 0 0.5px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 0.5px rgba(0, 0, 0, 0.07);
+    --drop: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    --hair: inset 0 0 0 0.5px rgba(0, 0, 0, 0.07);
+    color-scheme: light;
 }
 
 /* Reset */
@@ -40,6 +48,12 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent-orange);
+    outline-offset: 2px;
 }
 
 /* Pixel Border Utility */
@@ -101,9 +115,15 @@ header .byline {
 nav {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
+    gap: 2px;
+    width: fit-content;
+    margin: 1.5rem auto 0;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--glass);
+    -webkit-backdrop-filter: var(--blur);
+    backdrop-filter: var(--blur);
+    box-shadow: var(--rim), var(--drop);
 }
 
 nav a {
@@ -112,14 +132,23 @@ nav a {
     color: var(--text-primary);
     text-decoration: none;
     padding: 0.75rem 1.25rem;
-    background: var(--bg-medium);
-    border: 2px solid var(--accent-green);
-    transition: all 0.15s ease;
+    border-radius: 999px;
+    transition: background-color 0.15s ease-out, color 0.15s ease-out, transform 0.15s ease-out;
 }
 
 nav a:hover {
-    background: var(--accent-green);
-    color: #ffffff;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--accent-green);
+}
+
+nav a:active {
+    transform: scale(0.97);
+}
+
+nav a[aria-current="page"] {
+    background: rgba(45, 106, 79, 0.12);
+    color: var(--accent-green);
+    box-shadow: inset 0 0 0 0.5px rgba(45, 106, 79, 0.3);
 }
 
 /* Buttons */
@@ -128,34 +157,35 @@ nav a:hover {
     font-size: 0.7rem;
     padding: 1rem 1.5rem;
     border: none;
+    border-radius: 999px;
     cursor: pointer;
     background: var(--accent-green);
     color: #ffffff;
-    transition: all 0.15s ease;
+    box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.45), 0 4px 14px rgba(45, 106, 79, 0.25);
+    transition: background-color 0.15s ease-out, transform 0.15s ease-out, box-shadow 0.15s ease-out;
     text-decoration: none;
     display: inline-block;
 }
 
 .btn:hover {
     background: var(--accent-orange);
-    transform: translate(-2px, -2px);
-    box-shadow: 4px 4px 0 var(--accent-green);
+    transform: translateY(-1px);
+    box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.45), 0 6px 18px rgba(199, 123, 63, 0.3);
 }
 
 .btn:active {
-    transform: translate(0, 0);
-    box-shadow: none;
+    transform: scale(0.97);
 }
 
 .btn-secondary {
     background: var(--bg-medium);
     color: var(--text-primary);
-    border: 2px solid var(--accent-green);
+    box-shadow: var(--hair), inset 0 0 0 1.5px rgba(45, 106, 79, 0.45), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .btn-secondary:hover {
     background: var(--bg-light);
-    box-shadow: 4px 4px 0 var(--accent-orange);
+    box-shadow: var(--hair), inset 0 0 0 1.5px var(--accent-orange), 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .btn-danger {
@@ -174,17 +204,19 @@ textarea {
     font-size: 1rem;
     padding: 0.75rem 1rem;
     background: var(--bg-medium);
-    border: 2px solid var(--accent-green);
+    border: 0;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 1.5px rgba(45, 106, 79, 0.5);
     color: var(--text-primary);
     width: 100%;
     outline: none;
+    transition: box-shadow 0.15s ease-out;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-    border-color: var(--accent-orange);
-    box-shadow: 0 0 0 2px rgba(199, 123, 63, 0.25);
+    box-shadow: inset 0 0 0 1.5px var(--accent-orange), 0 0 0 4px rgba(199, 123, 63, 0.2);
 }
 
 textarea {
@@ -212,19 +244,35 @@ label {
 }
 
 .post-item {
+    position: relative;
     background: var(--bg-medium);
     padding: 1.5rem;
-    border-left: 4px solid var(--accent-green);
+    border-radius: 16px;
     cursor: pointer;
-    transition: all 0.15s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: background-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    box-shadow: var(--hair), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.post-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: var(--accent-green);
+    transition: background-color 0.2s ease-out;
 }
 
 .post-item:hover {
     background: var(--bg-light);
-    border-left-color: var(--accent-orange);
     transform: translateX(4px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--hair), 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.post-item:hover::before {
+    background: var(--accent-orange);
 }
 
 .post-item h2 {
@@ -255,7 +303,8 @@ label {
 .post-content {
     background: var(--bg-medium);
     padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border-radius: 20px;
+    box-shadow: var(--hair), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .post-content h1 {
@@ -295,6 +344,7 @@ label {
     height: auto;
     display: block;
     border: 2px solid var(--accent-green);
+    border-radius: 12px;
 }
 
 .post-media audio {
@@ -309,6 +359,7 @@ label {
 /* Drop Zone */
 .drop-zone {
     border: 3px dashed var(--accent-green);
+    border-radius: 18px;
     padding: 3rem 2rem;
     text-align: center;
     background: var(--bg-medium);
@@ -348,6 +399,7 @@ label {
     height: 120px;
     background: var(--bg-light);
     border: 2px solid var(--accent-green);
+    border-radius: 12px;
     overflow: hidden;
 }
 
@@ -376,6 +428,7 @@ label {
     background: var(--accent-red);
     color: white;
     border: none;
+    border-radius: 50%;
     cursor: pointer;
     font-size: 1rem;
     line-height: 1;
@@ -394,8 +447,9 @@ label {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(26, 26, 46, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(26, 26, 46, 0.45);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -406,12 +460,14 @@ label {
 }
 
 .modal-content {
-    background: var(--bg-medium);
+    background: var(--glass-solid);
+    -webkit-backdrop-filter: var(--blur);
+    backdrop-filter: var(--blur);
     padding: 2rem;
     max-width: 400px;
     width: 90%;
-    border: 4px solid var(--accent-green);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border-radius: 26px;
+    box-shadow: var(--rim), inset 0 0 0 1.5px rgba(45, 106, 79, 0.35), 0 30px 80px rgba(26, 26, 46, 0.3);
 }
 
 .modal-content h2 {
@@ -427,12 +483,14 @@ label {
     height: 20px;
     background: var(--bg-light);
     border: 2px solid var(--accent-green);
+    border-radius: 999px;
     overflow: hidden;
     margin: 1rem 0;
 }
 
 .progress-bar-fill {
     height: 100%;
+    border-radius: 999px;
     background: var(--accent-green);
     transition: width 0.3s;
 }
@@ -483,6 +541,8 @@ label {
     text-align: center;
     padding: 3rem;
     background: var(--bg-medium);
+    border-radius: 20px;
+    box-shadow: var(--hair);
 }
 
 .empty-state p {
@@ -497,7 +557,8 @@ label {
     text-align: center;
     padding: 2rem;
     background: var(--bg-medium);
-    border-left: 4px solid var(--accent-red);
+    border-radius: 20px;
+    box-shadow: var(--hair), inset 4px 0 0 var(--accent-red);
 }
 
 .error-state p {
@@ -512,13 +573,16 @@ label {
     bottom: 2rem;
     right: 2rem;
     padding: 1rem 1.5rem;
-    background: var(--bg-medium);
-    border: 2px solid var(--accent-green);
+    background: var(--glass-solid);
+    -webkit-backdrop-filter: var(--blur);
+    backdrop-filter: var(--blur);
+    border: 1.5px solid var(--accent-green);
+    border-radius: 18px;
     font-family: var(--font-pixel);
     font-size: 0.6rem;
     z-index: 1001;
-    animation: slideIn 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: var(--rim), 0 14px 40px rgba(0, 0, 0, 0.14);
 }
 
 .toast.error {
@@ -570,7 +634,8 @@ label {
     margin-bottom: 2rem;
     font-family: var(--font-pixel);
     font-size: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border-radius: 999px;
+    box-shadow: var(--hair), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .admin-status .status-indicator {
@@ -595,7 +660,7 @@ label {
     text-align: center;
     padding: 2rem 1rem;
     margin-top: 3rem;
-    border-top: 2px solid var(--bg-light);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.1);
 }
 
 .site-footer .footer-links {
@@ -655,16 +720,6 @@ label {
         font-size: 1rem;
     }
 
-    nav {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    nav a {
-        width: 100%;
-        text-align: center;
-    }
-
     .container {
         padding: 1rem;
     }
@@ -678,9 +733,38 @@ label {
         text-align: center;
     }
 
+    .admin-status .btn {
+        width: auto;
+    }
+
     .media-preview-item {
         width: 80px;
         height: 80px;
+    }
+}
+
+/* Reduce Transparency (System Settings > Accessibility > Display): solid surfaces, no blur */
+@media (prefers-reduced-transparency: reduce) {
+    :root {
+        --glass: #ffffff;
+        --glass-solid: #ffffff;
+    }
+
+    nav,
+    .modal,
+    .modal-content,
+    .toast {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    nav a,
+    .post-item,
+    .post-item::before {
+        transition: none;
     }
 }
 
